@@ -5,7 +5,6 @@ import re
 import requests
 from config import TOKEN
 
-
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
 XBET = 'https://part.upnp.xyz/PartLive/GetAllFeedGames?sportid=103&periodid=1'
 
@@ -24,14 +23,14 @@ def send_message(text, chat_id):
     return get_url(url)
 
 
-def get_refferal():
+def get_referral():
+    """Generates referral link from php script"""
     url = 'http://127.0.0.1:84/api.php'
     return requests.get(url).json()['work'] + 'L?tag=s_315357m_1107c_%26site=315357%26ad=1107'
-###################################################################################################
 
 
 def match_info(i):
-    """Sends anouncement about next game in MK10"""
+    """Sends announcement about next game in MK10"""
     game_id = str(data[i]['I'])
     global actual_link_for_results
     actual_link_for_results = data[i]['U'][12:18]
@@ -54,7 +53,7 @@ def match_info(i):
 
     hashtag_second_line = '%20%23' + ''.join(data[i]['H'].split()) + \
                           '_' + ''.join(data[i]['A'].split())
-    
+
     main_coefs = 'П1' + '(' + (str(coef['Value']['E'][0]['C'])) + ') - ' + \
                  'П2(' + (str(coef['Value']['E'][1]['C'])) + ')'
 
@@ -67,19 +66,21 @@ def match_info(i):
                     (str(coef['Value']['E'][6]['C'])) + ') R(' + \
                     (str(coef['Value']['E'][7]['C'])) + ')'
 
-    time_stamps = str(round((coef['Value']['E'][8]['P'] - 100) * 100, 2)) + '/' \
-                + str(round((coef['Value']['E'][10]['P'] - 100) * 100, 2)) + '/' \
-                + str(round((coef['Value']['E'][12]['P'] - 100) * 100, 2))
+    time_stamps = str(round((coef['Value']['E'][8]['P'] - 100) * 100, 2)) + '/' + \
+                  str(round((coef['Value']['E'][10]['P'] - 100) * 100, 2)) + '/' + \
+                  str(round((coef['Value']['E'][12]['P'] - 100) * 100, 2))
 
-    promo = 'Ставим тут ' + get_refferal() + '\nБонус до 9100р, промокод на бонус [MORTAL10]'
+    promo = 'Ставим тут ' + get_referral() + '\nБонус до 9100р, промокод на бонус [MORTAL10]'
 
     with open(game_id + '.txt', 'w', encoding='utf-8') as file:
         file.writelines('{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}'.format(game, starting_time, hashtag_first_line,
-                                                               hashtag_second_line, main_coefs, fbr_coefs, time_stamps,
-                                                               promo))
+                                                                hashtag_second_line, main_coefs, fbr_coefs, time_stamps,
+                                                                promo))
 
     return '{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}'.format(game, starting_time, hashtag_first_line,
                                                    hashtag_second_line, main_coefs, fbr_coefs, time_stamps, promo)
+
+
 ########################################################################################################################
 
 
@@ -131,6 +132,8 @@ def results(game):
             score_second_player += 1
         res_fbr += str(score_first_player) + ':' + str(score_second_player) + ' ' + ans_2[i][2][0] + '; '
     return '\n' + first_part_result + '\n' + total_score + ' (' + res_fbr + ')' + '\n\n'
+
+
 #######################################################################################################################
 
 
@@ -146,7 +149,7 @@ def combo_results(game):
     with open(str(game) + '.txt', 'r', encoding='utf-8') as file:
         lines = file.readlines()
         lines.insert(7, results(i))
-            
+
     return ''.join(lines)
 
 
@@ -172,7 +175,7 @@ while True:
             time.sleep(1)
 
     while not match_checker(data):
-        print('searching for a match...(bot.py)')
+        print('searching for a match...(bot_stats.py)')
         time.sleep(4)
         for i in range(10):
             try:

@@ -25,10 +25,10 @@ def send_message(text, chat_id):
     return get_url(url)
 
 
-def get_refferal():
+def get_referral():
+    """Generates referral link from php script"""
     url = 'http://127.0.0.1:84/api.php'
     return requests.get(url).json()['work'] + 'L?tag=s_315357m_1107c_%26site=315357%26ad=1107'
-###################################################################################################
 
 
 def match_info(i):
@@ -66,7 +66,7 @@ def match_info(i):
     else:
         return ''
 
-    promo = 'Ставим тут ' + get_refferal() + '\nБонус до 9100р, промокод на бонус [MORTAL10]'
+    promo = 'Ставим тут ' + get_referral() + '\nБонус до 9100р, промокод на бонус [MORTAL10]'
 
     with open('time' + game_id + '.txt', 'w', encoding='utf-8') as game_info:
         game_info.writelines('{}\n{}\n{}\n{}\n{}'.format(first_line, second_line,

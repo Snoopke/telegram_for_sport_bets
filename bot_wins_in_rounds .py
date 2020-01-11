@@ -24,14 +24,14 @@ def send_message(text, chat_id):
     return get_url(url)
 
 
-def get_refferal():
+def get_referral():
+    """Generates referral link from php script"""
     url = 'http://127.0.0.1:84/api.php'
     return requests.get(url).json()['work'] + 'L?tag=s_315357m_1107c_%26site=315357%26ad=1107'
-###################################################################################################
 
 
 def match_info(i):
-    """Sends anouncement about next game in MK10"""
+    """Sends announcement about next game in MK10"""
     game_id = str(data[i]['I'])
     session = requests.Session()
     global actual_link_to_xbet
@@ -64,15 +64,12 @@ def match_info(i):
         else:
             return ''
 
-    promo = 'Ставим тут ' + get_refferal() + '\nБонус до 9100р, промокод на бонус [MORTAL10]'
+    promo = 'Ставим тут ' + get_referral() + '\nБонус до 9100р, промокод на бонус [MORTAL10]'
 
     with open('wins' + game_id + '.txt', 'w', encoding='utf-8') as file:
         file.writelines('{}\n{}\n{}\n{}\n{}'.format(first_line, second_line, result, fourth_line, promo))
 
     return '{}\n{}\n{}\n{}\n{}'.format(first_line, second_line, result, fourth_line, promo)
-
-
-########################################################################################################################
 
 
 def results(game):
@@ -84,19 +81,17 @@ def results(game):
         lines = file.readlines()
         winner = lines[1][11]
         if winner == '1':
-            if 'S1' in coef['Value']['SC']['FS'] and not 'S2' in coef['Value']['SC']['FS']:
+            if 'S1' in coef['Value']['SC']['FS'] and 'S2' not in coef['Value']['SC']['FS']:
                 return '1 раунд' + ' ✅ '
             elif 'S1' in coef['Value']['SC']['FS'] and 'S2' in coef['Value']['SC']['FS']:
                 return str(coef['Value']['SC']['FS']['S1'] + coef['Value']['SC']['FS']['S2']) + ' раунд' + ' ✅ '
         else:
-            if 'S2' in coef['Value']['SC']['FS'] and not 'S1' in coef['Value']['SC']['FS']:
+            if 'S2' in coef['Value']['SC']['FS'] and 'S1' not in coef['Value']['SC']['FS']:
                 return '1 раунд' + ' ✅ '
             elif 'S2' in coef['Value']['SC']['FS'] and 'S1' in coef['Value']['SC']['FS']:
                 return str(coef['Value']['SC']['FS']['S1'] + coef['Value']['SC']['FS']['S2']) + ' раунд' + ' ✅ '
 
     return ''
-
-#######################################################################################################################
 
 
 def edit_message(chat_id, message_id, text):
