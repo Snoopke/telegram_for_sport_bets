@@ -147,12 +147,14 @@ while True:
     else:
         for i in range(len(data)):
             if 'Mortal Kombat X' in data[i]['C'] and (round((int(data[i]['D'][6:-5]) - time.time()) / 60, 2) >= 4):
-                #try:
-                x = send_message(str(match_info(i)), '-1001305018894')
-                x = json.loads(x)
-                awaiting_results[data[i]['I']] = x['result']['message_id']
-                #except:
-                    #print('some data is empty')
+                try:
+                    x = send_message(str(match_info(i)), '-1001305018894')
+                    x = json.loads(x)
+                    awaiting_results[data[i]['I']] = x['result']['message_id']
+                except KeyError:
+                    print('some data is empty')
+                except json.JSONDecodeError:
+                    print('empty json')
                 print(awaiting_results)
     for i in range(8):
         for i in list(awaiting_results):
