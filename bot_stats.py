@@ -34,9 +34,9 @@ def match_info(i):
     game_id = str(data[i]['I'])
     global actual_link_for_results
     actual_link_for_results = data[i]['U'][12:18]
-    rekv = requests.get('https://one-' + actual_link_for_results +
+    req = requests.get('https://one-' + actual_link_for_results +
                         '.world/LiveFeed/GetGameZip?id=' + game_id + '&lng=ru')
-    coef = rekv.json()
+    response = req.json()
     game = 'Mortal Kombat X'
     starting_time = str(time.strftime("%Y.%m.%d %H:%M", time.localtime(int(data[i]['D'][6:-5]))))
     if data[i]['A'] == "Ди'Вора":
@@ -54,21 +54,21 @@ def match_info(i):
     hashtag_second_line = '%20%23' + ''.join(data[i]['H'].split()) + \
                           '_' + ''.join(data[i]['A'].split())
 
-    main_coefs = 'П1' + '(' + (str(coef['Value']['E'][0]['C'])) + ') - ' + \
-                 'П2(' + (str(coef['Value']['E'][1]['C'])) + ')'
+    main_coefs = 'П1' + '(' + (str(response['Value']['E'][0]['C'])) + ') - ' + \
+                 'П2(' + (str(response['Value']['E'][1]['C'])) + ')'
 
-    if coef['Value']['E'][2]['C'] < 11:
-        fbr_coefs = 'F(' + (str(coef['Value']['E'][2]['C'])) + ') B(' + \
-                    (str(coef['Value']['E'][5]['C'])) + ') R(' + \
-                    (str(coef['Value']['E'][6]['C'])) + ')'
+    if response['Value']['E'][2]['C'] < 11:
+        fbr_coefs = 'F(' + (str(response['Value']['E'][2]['C'])) + ') B(' + \
+                    (str(response['Value']['E'][5]['C'])) + ') R(' + \
+                    (str(response['Value']['E'][6]['C'])) + ')'
     else:
-        fbr_coefs = 'F(' + (str(coef['Value']['E'][3]['C'])) + ') B(' + \
-                    (str(coef['Value']['E'][6]['C'])) + ') R(' + \
-                    (str(coef['Value']['E'][7]['C'])) + ')'
+        fbr_coefs = 'F(' + (str(response['Value']['E'][3]['C'])) + ') B(' + \
+                    (str(response['Value']['E'][6]['C'])) + ') R(' + \
+                    (str(response['Value']['E'][7]['C'])) + ')'
 
-    time_stamps = str(round((coef['Value']['E'][8]['P'] - 100) * 100, 2)) + '/' + \
-                  str(round((coef['Value']['E'][10]['P'] - 100) * 100, 2)) + '/' + \
-                  str(round((coef['Value']['E'][12]['P'] - 100) * 100, 2))
+    time_stamps = str(round((response['Value']['E'][8]['P'] - 100) * 100, 2)) + '/' + \
+                  str(round((response['Value']['E'][10]['P'] - 100) * 100, 2)) + '/' + \
+                  str(round((response['Value']['E'][12]['P'] - 100) * 100, 2))
 
     promo = 'Ставим тут ' + get_referral() + '\nБонус до 9100р, промокод на бонус [MORTAL10]'
 
@@ -87,20 +87,20 @@ def match_info(i):
 def results(game):
     """Sends result of ended matches into tg channel"""
 
-    rekv = requests.get('https://one-' + actual_link_for_results +
+    req = requests.get('https://one-' + actual_link_for_results +
                         '.world/LiveFeed/GetGameZip?id=' + str(game) + '&lng=ru')
-    coef = rekv.json()
+    response = req.json()
 
-    player_1 = coef['Value']['O1']
-    player_2 = coef['Value']['O2']
-    if len(coef['Value']['SC']['FS']) == 2:
-        total_score = str(coef['Value']['SC']['FS']['S1']) + ':' + str(coef['Value']['SC']['FS']['S2'])
+    player_1 = response['Value']['O1']
+    player_2 = response['Value']['O2']
+    if len(response['Value']['SC']['FS']) == 2:
+        total_score = str(response['Value']['SC']['FS']['S1']) + ':' + str(response['Value']['SC']['FS']['S2'])
     else:
-        if 'S1' in coef['Value']['SC']['FS']:
-            total_score = str(coef['Value']['SC']['FS']['S1']) + ':0'
+        if 'S1' in response['Value']['SC']['FS']:
+            total_score = str(response['Value']['SC']['FS']['S1']) + ':0'
         else:
-            total_score = '0:' + str(coef['Value']['SC']['FS']['S2'])
-    text = (coef['Value']['SC']['S'][1]['Value']).strip('[]')
+            total_score = '0:' + str(response['Value']['SC']['FS']['S2'])
+    text = (response['Value']['SC']['S'][1]['Value']).strip('[]')
     regex = r':([a-zA-z0-9а-яА-я" ]+)'
     res_match = (re.findall(regex, text))
     ans = []
